@@ -35,10 +35,10 @@ public class WebBrowser
 		pw.println("");
 		pw.flush();
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//		String output = getHTML(br);
-//		String t;
-//		while((t = br.readLine()) != null) {System.out.println(t);}
-//		br.close();
+		//String output = getHTML(br);
+		String t;
+		while((t = br.readLine()) != null) {System.out.println(t);}
+		br.close();
 	}
 	
 	public static String getHTML(BufferedReader br) throws IOException
