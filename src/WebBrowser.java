@@ -58,6 +58,8 @@ public class WebBrowser
 		{
 			webfile = webfile.substring(webfile.indexOf("<title>") + 7);
 			title = webfile.substring(0, webfile.indexOf("</title>"));
+			title = title.replaceAll("    ", " ");
+			title = title.replaceAll("   ", " ");
 			System.out.println(title + "\n");
 		}
 		
@@ -85,6 +87,8 @@ public class WebBrowser
 				if (textIndex < imgIndex)
 				{
 					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+					text = text.replaceAll("    ", " ");
+					text = text.replaceAll("   ", " ");
 					webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 					System.out.println(text + "\n");
 				}
@@ -92,6 +96,8 @@ public class WebBrowser
 				{
 					webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
 					img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
+					img = img.replaceAll("    ", " ");
+					img = img.replaceAll("   ", " ");
 					webfile = webfile.substring(webfile.indexOf(">") + 1);
 					System.out.println(img + "\n");
 				}
@@ -99,6 +105,8 @@ public class WebBrowser
 			else if (textCont)
 			{
 				text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+				text = text.replaceAll("    ", " ");
+				text = text.replaceAll("   ", " ");
 				webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 				System.out.println(text + "\n");
 			}
@@ -106,6 +114,8 @@ public class WebBrowser
 			{
 				webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
 				img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
+				img = img.replaceAll("    ", " ");
+				img = img.replaceAll("   ", " ");
 				webfile = webfile.substring(webfile.indexOf(">") + 1);
 				System.out.println(img + "\n");
 			}
