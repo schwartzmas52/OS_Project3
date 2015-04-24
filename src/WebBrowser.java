@@ -11,7 +11,15 @@ public class WebBrowser
 		String url = "http://www.december.com/html/demo/hello.html";
 		String host;
 		String directory;
-		int port = 80;
+		String webfile = "";
+		String title;
+		String text;
+		String img;
+		int port = 80,
+			textIndex,
+			imgIndex;
+		boolean	textCont,
+				imgCont;
 		if (url.contains("http://"))
 		{
 			url = url.substring(7);
@@ -37,8 +45,51 @@ public class WebBrowser
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		//String output = getHTML(br);
 		String t;
-		while((t = br.readLine()) != null) {System.out.println(t);}
+		
+		while((t = br.readLine()) != null)
+		{
+			//System.out.println(t);
+			webfile += t;
+		}
+		
 		br.close();
+		
+		if (webfile.contains("<title>"))
+		{
+			webfile = webfile.substring(webfile.indexOf("<title>") + 7);
+			title = webfile.substring(0, webfile.indexOf("</title>"));
+			System.out.println(title + "\n");
+		}
+		
+		System.out.print(webfile);
+		
+		while (webfile.contains("<p>") || webfile.contains("<img"))
+		{
+			textIndex = imgIndex = 0;
+			textCont = imgCont = false;
+			
+			if (webfile.contains("<p>"))
+			{
+				textIndex = webfile.indexOf("<p>");
+				textCont = true;
+			}
+			
+			if (webfile.contains("<img"))
+			{
+				imgIndex = webfile.indexOf("<img");
+				imgCont = true;
+			}
+			
+			if (textCont && imgCont)
+			{
+				if (textIndex < imgIndex)
+				{
+					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+					System.out.println(text + "\n");
+				}
+			}
+				
+		}
 	}
 	
 	public static String getHTML(BufferedReader br) throws IOException
