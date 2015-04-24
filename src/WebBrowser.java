@@ -17,9 +17,11 @@ public class WebBrowser
 		String img;
 		int port = 80,
 			textIndex,
-			imgIndex;
+			imgIndex;			
 		boolean	textCont,
-				imgCont;
+				imgCont,
+				textRun,
+				imgRun;
 		if (url.contains("http://"))
 		{
 			url = url.substring(7);
@@ -68,7 +70,7 @@ public class WebBrowser
 		while (webfile.contains("<p>") || webfile.contains("<img src="))
 		{
 			textIndex = imgIndex = 0;
-			textCont = imgCont = false;
+			textCont = imgCont = textRun = imgRun = false;
 			
 			if (webfile.contains("<p>"))
 			{
@@ -85,24 +87,16 @@ public class WebBrowser
 			if (textCont && imgCont)
 			{
 				if (textIndex < imgIndex)
-				{
-					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
-					text = text.replaceAll("    ", " ");
-					text = text.replaceAll("   ", " ");
-					webfile = webfile.substring(webfile.indexOf("</p>") + 4);
-					System.out.println(text + "\n");
-				}
+					textRun = true;
 				else
-				{
-					webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
-					img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
-					img = img.replaceAll("    ", " ");
-					img = img.replaceAll("   ", " ");
-					webfile = webfile.substring(webfile.indexOf(">") + 1);
-					System.out.println(img + "\n");
-				}
+					imgRun = true;
 			}
 			else if (textCont)
+				textRun = true;
+			else if (imgCont)
+				imgRun = true;
+			
+			if (textRun)
 			{
 				text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
 				text = text.replaceAll("    ", " ");
@@ -110,7 +104,7 @@ public class WebBrowser
 				webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 				System.out.println(text + "\n");
 			}
-			else if (imgCont)
+			else if (imgRun)
 			{
 				webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
 				img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
@@ -119,7 +113,6 @@ public class WebBrowser
 				webfile = webfile.substring(webfile.indexOf(">") + 1);
 				System.out.println(img + "\n");
 			}
-				
 		}
 	}
 	
