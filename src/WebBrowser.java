@@ -61,9 +61,9 @@ public class WebBrowser
 			System.out.println(title + "\n");
 		}
 		
-		System.out.print(webfile);
+		//System.out.print(webfile);
 		
-		while (webfile.contains("<p>") || webfile.contains("<img"))
+		while (webfile.contains("<p>") || webfile.contains("<img src="))
 		{
 			textIndex = imgIndex = 0;
 			textCont = imgCont = false;
@@ -74,9 +74,9 @@ public class WebBrowser
 				textCont = true;
 			}
 			
-			if (webfile.contains("<img"))
+			if (webfile.contains("<img src="))
 			{
-				imgIndex = webfile.indexOf("<img");
+				imgIndex = webfile.indexOf("<img src=");
 				imgCont = true;
 			}
 			
@@ -85,8 +85,29 @@ public class WebBrowser
 				if (textIndex < imgIndex)
 				{
 					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+					webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 					System.out.println(text + "\n");
 				}
+				else
+				{
+					webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
+					img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
+					webfile = webfile.substring(webfile.indexOf(">") + 1);
+					System.out.println(img + "\n");
+				}
+			}
+			else if (textCont)
+			{
+				text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+				webfile = webfile.substring(webfile.indexOf("</p>") + 4);
+				System.out.println(text + "\n");
+			}
+			else if (imgCont)
+			{
+				webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
+				img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
+				webfile = webfile.substring(webfile.indexOf(">") + 1);
+				System.out.println(img + "\n");
 			}
 				
 		}
