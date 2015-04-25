@@ -101,6 +101,13 @@ public class WebBrowser
 				text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
 				text = text.replaceAll("    ", " ");
 				text = text.replaceAll("   ", " ");
+				
+				if (text.contains("<a href"))
+				{
+					text = text.replaceAll("<a href.*?>", "");
+					text = text.replaceAll("</a>", "");
+				}
+				
 				webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 				System.out.println(text + "\n");
 			}
