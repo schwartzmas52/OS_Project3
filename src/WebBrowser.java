@@ -10,13 +10,11 @@ public class WebBrowser
 {
 	public static void main(String[] args) throws IOException
 	{
-		Date date = new Date();
-		
 		//String url = "http://www.december.com/html/demo/hello.html";
 		//String url = "matthewecker.com/index.html";
-		String url = "http://www.utdallas.edu/~ozbirn/image.html";
+		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
 		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
-		//String url = "http://htmldog.com/examples/images1.html";
+		String url = "http://htmldog.com/examples/images1.html";
 		//String url = "http://portquiz.net:8080/";
 		//String url = "http://www.utdallas.edu/os.html";
 		String host;
@@ -71,6 +69,8 @@ public class WebBrowser
 		
 		webfile = getHTML(br);
 		
+		System.out.println("2 " + new Date());
+		
 		if (webfile.contains("<title>"))
 		{
 			webfile = webfile.substring(webfile.indexOf("<title>") + 7);
@@ -123,6 +123,18 @@ public class WebBrowser
 					text = text.replaceAll("</a>", "");
 				}
 				
+				if (text.contains("alt=\""))
+				{
+					text = text.replaceAll("alt=\".*?>", "");
+				}
+				
+				if (text.contains("<img src"))
+				{
+					System.out.print("Image: ");
+					text = text.replaceAll("<img src=", "");
+					text = text.replaceAll("\"", "");
+				}
+				
 				webfile = webfile.substring(webfile.indexOf("</p>") + 4);
 				System.out.println(text + "\n");
 			}
@@ -131,6 +143,12 @@ public class WebBrowser
 				webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
 				img = webfile.substring(0, webfile.indexOf(">"));
 				img = img.replaceAll(" ", "");
+				
+				if (img.contains("alt=\""))
+				{
+					img = img.replaceAll("alt=\".*?\"", "");
+				}
+
 				img = img.replaceAll("\"", "");
 				webfile = webfile.substring(webfile.indexOf(">") + 1);
 				System.out.println("Image: " + img + "\n");
