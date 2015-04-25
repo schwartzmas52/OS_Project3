@@ -8,7 +8,8 @@ public class WebBrowser
 {
 	public static void main(String[] args) throws IOException
 	{
-		String url = "http://www.december.com/html/demo/hello.html";
+		//String url = "http://www.december.com/html/demo/hello.html";
+		String url = "matthewecker.com/index.html";
 		String host;
 		String directory;
 		String webfile = "";
@@ -114,15 +115,15 @@ public class WebBrowser
 			else if (imgRun)
 			{
 				webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
-				img = webfile.substring(webfile.indexOf("<img src=") + 3, webfile.indexOf(">"));
-				img = img.replaceAll("    ", " ");
-				img = img.replaceAll("   ", " ");
+				img = webfile.substring(0, webfile.indexOf(">"));
+				img = img.replaceAll(" ", "");
+				img = img.replaceAll("\"", "");
 				webfile = webfile.substring(webfile.indexOf(">") + 1);
-				System.out.println(img + "\n");
+				System.out.println("Image: " + img + "\n");
 			}
 		}
 	}
-	
+/*
 	public static String getHTML(BufferedReader br) throws IOException
 	{
 		String html = "";
@@ -136,5 +137,5 @@ public class WebBrowser
 			html += "\n";
 		}
 		return html;
-	}
+	}*/
 }
