@@ -3,13 +3,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
 
 public class WebBrowser 
 {
 	public static void main(String[] args) throws IOException
 	{
-		//String url = "http://www.december.com/html/demo/hello.html";
-		String url = "matthewecker.com/index.html";
+		Date date = new Date();
+		
+		String url = "http://www.december.com/html/demo/hello.html";
+		//String url = "matthewecker.com/index.html";
+		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
+		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
+		//String url = "http://htmldog.com/examples/images1.html";
+		//String url = "http://portquiz.net:8080/";
+		//String url = "http://www.utdallas.edu/os.html";
 		String host;
 		String directory;
 		String webfile = "";
@@ -38,25 +46,31 @@ public class WebBrowser
 			host = url.substring(0, url.indexOf("/"));
 			directory = url.substring(url.indexOf("/"));
 		}
+		System.out.println("1 " + new Date());
 		Socket socket = new Socket(host, port);
 		PrintWriter pw = new PrintWriter(socket.getOutputStream());
+		System.out.println("2 " + new Date());
 		pw.println("GET " + directory + " HTTP/1.1");
+		System.out.println("3 " + new Date());
 		pw.println("Host: " + host);
+		System.out.println("4 " + new Date());
 		pw.println("Accept: */*");
+		System.out.println("5 " + new Date());
 		pw.println("");
 		pw.flush();
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		System.out.println("6 " + new Date());
 		//String output = getHTML(br);
 		String t;
-		
+		System.out.println("7 " + new Date());
 		while((t = br.readLine()) != null)
 		{
 			//System.out.println(t);
 			webfile += t;
 		}
-		
+		System.out.println("8 " + new Date());
 		br.close();
-		
+		System.out.println("9 " + new Date());
 		if (webfile.contains("<title>"))
 		{
 			webfile = webfile.substring(webfile.indexOf("<title>") + 7);
