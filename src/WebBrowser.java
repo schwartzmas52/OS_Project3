@@ -23,15 +23,19 @@ public class WebBrowser
 				webfile = "",
 				title,
 				text,
-				img;
+				img,
+				head;
 		ArrayList<String> imgArray = new ArrayList<String>();
 		int port = 80,
 			textIndex,
-			imgIndex;			
+			imgIndex,
+			headIndex;
 		boolean	textCont,
 				imgCont,
+				headCont,
 				textRun,
-				imgRun;
+				imgRun,
+				headRun;
 		if (url.contains("http://"))
 		{
 			url = url.substring(7);
@@ -69,8 +73,8 @@ public class WebBrowser
 					
 			while (webfile.contains("<p>") || webfile.contains("<img src="))
 			{
-				textIndex = imgIndex = 0;
-				textCont = imgCont = textRun = imgRun = false;
+				textIndex = imgIndex = headIndex = 0;
+				textCont = imgCont = headCont = textRun = imgRun = headRun = false;
 				
 				if (webfile.contains("<p>"))
 				{
@@ -84,10 +88,39 @@ public class WebBrowser
 					imgCont = true;
 				}
 				
-				if (textCont && imgCont)
+				if (webfile.contains("<h1"))
+				{
+					headIndex = webfile.indexOf("<h1");
+					headCont = true;
+				}
+				
+				if (textCont && imgCont && headCont)
+				{
+					if ((textIndex < imgIndex) && (textIndex < headIndex))
+						textRun = true;
+					else if ((imgIndex < textIndex) && (imgIndex < headIndex))
+						imgRun = true;
+					else if ((headIndex < textIndex) && (headIndex < imgIndex))
+						headRun = true;
+				}
+				else if (textCont && imgCont)
 				{
 					if (textIndex < imgIndex)
 						textRun = true;
+					else
+						imgRun = true;
+				}
+				else if (textCont && headCont)
+				{
+					if (textIndex < headIndex)
+						textRun = true;
+					else
+						headRun = true;
+				}
+				else if (headCont && imgCont)
+				{
+					if (headIndex < imgIndex)
+						headRun = true;
 					else
 						imgRun = true;
 				}
@@ -95,6 +128,8 @@ public class WebBrowser
 					textRun = true;
 				else if (imgCont)
 					imgRun = true;
+				else if (headCont)
+					headRun = true;
 				
 				if (textRun)
 				{
@@ -132,6 +167,12 @@ public class WebBrowser
 					webfile = webfile.substring(webfile.indexOf(">") + 1);
 					System.out.println("Image: " + img + "\n");
 					imgArray.add(img);
+				}
+				else if (headRun)
+				{
+					head = webfile.substring(webfile.indexOf("<h1") + 4, webfile.indexOf("</h1"));
+					webfile = webfile.substring(webfile.indexOf("</h1") + 5);
+					System.out.println(head + "\n");
 				}
 			}
 			printImages(imgArray, savedURL, port);
