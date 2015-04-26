@@ -14,17 +14,17 @@ public class WebBrowser
 		//String url = "http://www.december.com/html/demo/hello.html";
 		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
 		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
-		String url = "http://htmldog.com/examples/images1.html";
-		//String url = "http://portquiz.net:8080/";
+		//String url = "http://htmldog.com/examples/images1.html";
+		String url = "http://portquiz.net:8080/";
 		//String url = "http://www.utdallas.edu/os.html";
-		String savedURL = url;
+		String 	savedURL = url,
+				host,
+				directory,
+				webfile = "",
+				title,
+				text,
+				img;
 		ArrayList<String> imgArray = new ArrayList<String>();
-		String host;
-		String directory;
-		String webfile = "";
-		String title;
-		String text;
-		String img;
 		int port = 80,
 			textIndex,
 			imgIndex;			
@@ -101,9 +101,9 @@ public class WebBrowser
 					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
 					text = text.replaceAll("<b>", "");
 					text = text.replaceAll("</b>", "");
+					text = text.replaceAll("<br/>", "\n");
 					text = text.replaceAll("<i>", "");
 					text = text.replaceAll("</i>", "");
-					text = text.replaceAll("<br/>", "");
 					text = text.replaceAll("<strong>", "");
 					text = text.replaceAll("</strong>", "");
 					text = text.replaceAll("    ", " ");
@@ -114,9 +114,9 @@ public class WebBrowser
 					
 					if (text.contains("<img src"))
 					{
-						System.out.print("Image: ");
 						text = text.replaceAll("<img src=", "");
 						text = text.replaceAll("\"", "");
+						text = text.replaceAll("/>", "");
 					}
 					
 					webfile = webfile.substring(webfile.indexOf("</p>") + 4);
@@ -127,12 +127,7 @@ public class WebBrowser
 					webfile = webfile.substring(webfile.indexOf("<img src=") + 9);
 					img = webfile.substring(0, webfile.indexOf(">"));
 					img = img.replaceAll(" ", "");
-					
-					if (img.contains("alt=\""))
-					{
-						img = img.replaceAll("alt=\".*?\"", "");
-					}
-	
+					img = img.replaceAll("alt=\".*?\"", "");
 					img = img.replaceAll("\"", "");
 					webfile = webfile.substring(webfile.indexOf(">") + 1);
 					System.out.println("Image: " + img + "\n");
@@ -179,7 +174,6 @@ public class WebBrowser
 				directory = directory.substring(directory.indexOf("/"), directory.lastIndexOf("/") + 1);
 				directory += url;
 			}
-			System.out.println(host + " " + directory + " " + port);
 			Socket socket = new Socket(host, port);
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + directory + " HTTP/1.1");
