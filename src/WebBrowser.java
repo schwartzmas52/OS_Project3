@@ -1,5 +1,8 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,8 +17,8 @@ public class WebBrowser
 		//String url = "http://www.december.com/html/demo/hello.html";
 		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
 		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
-		//String url = "http://htmldog.com/examples/images1.html";
-		String url = "http://portquiz.net:8080/";
+		String url = "http://htmldog.com/examples/images1.html";
+		//String url = "http://portquiz.net:8080/";
 		//String url = "http://www.utdallas.edu/os.html";
 		String 	savedURL = url,
 				host,
@@ -185,13 +188,16 @@ public class WebBrowser
 
 	public static void printImages(ArrayList<String> imgArray, String originalURL, int originPort) throws IOException
 	{
+		int[] intArray = new int[65536];
+		int count = 0;
+		int byteLine;
+		boolean header = true;
 		String host;
 		String directory;
 		int port = originPort;
 		for (int i = 0; i < imgArray.size(); i++)
 		{
 			String url = imgArray.get(i);
-			int byteLine = 0;
 			if (url.contains("http://"))
 			{
 				url = url.substring(7);
@@ -218,15 +224,37 @@ public class WebBrowser
 			Socket socket = new Socket(host, port);
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + directory + " HTTP/1.1");
+			pw.println("Connection: close");
 			pw.println("Host: " + host);
 			pw.println("Accept: */*");
 			pw.println("");
 			pw.flush();
 			DataInputStream input = new DataInputStream(socket.getInputStream());
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 			while ((byteLine = input.read()) != -1)
 			{
-				
+				if (header) 
+				{
+					intArray[count] = byteLine;
+					if (count >= 4) 
+					{
+						if (intArray[count-3] == 13 && intArray[count-2] == 10 && intArray[count-1] == 13 && intArray[count] == 10) 
+						{
+							header = false;
+						}
+					}
+					count++;
+				} 
+				else 
+				{
+					byteStream.write(byteLine);
+				}
 			}
+			byte[] byteArray = byteStream.toByteArray();
+			FileOutputStream writer = new FileOutputStream(new File(directory.substring(directory.lastIndexOf("/") + 1)));
+	        writer.write(byteArray);
+	        writer.flush();
+	        writer.close();
 		}
 	}
 	
