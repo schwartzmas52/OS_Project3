@@ -91,33 +91,33 @@ public class WebBrowser
 					headIndex = webfile.indexOf("<h1");
 					headCont = true;
 				}
-				
+				//	figures out which text element to parse next
 				if (textCont && imgCont && headCont)	//	checks if all three are in webfile
 				{
-					if ((textIndex < imgIndex) && (textIndex < headIndex))
+					if ((textIndex < imgIndex) && (textIndex < headIndex))	//	if textIndex comes first, sets textRun to true
 						textRun = true;
-					else if ((imgIndex < textIndex) && (imgIndex < headIndex))
+					else if ((imgIndex < textIndex) && (imgIndex < headIndex))	//	if imgIndex comes first, sets imgRun to true
 						imgRun = true;
-					else if ((headIndex < textIndex) && (headIndex < imgIndex))
+					else if ((headIndex < textIndex) && (headIndex < imgIndex))	//	if headIndex comes first, sets headRun to true
 						headRun = true;
 				}
 				else if (textCont && imgCont)	//checks if <p> and <img src=" are in webfile
 				{
-					if (textIndex < imgIndex)
+					if (textIndex < imgIndex)	//	if textIndex comes first, sets textRun to true
 						textRun = true;
-					else
+					else						//	otherwise, sets imgRun to true
 						imgRun = true;
 				}
 				else if (textCont && headCont)
 				{
-					if (textIndex < headIndex)
+					if (textIndex < headIndex)	//	if textIndex comes first, sets textRun to true
 						textRun = true;
 					else
 						headRun = true;
 				}
 				else if (headCont && imgCont)
 				{
-					if (headIndex < imgIndex)
+					if (headIndex < imgIndex)	//	if headIndex comes first, sets headRun to true
 						headRun = true;
 					else
 						imgRun = true;
@@ -190,7 +190,7 @@ public class WebBrowser
 		String host;
 		String directory;
 		int port = originPort;
-		for (int i = 0; i < imgArray.size(); i++)
+		for (int i = 0; i < imgArray.size(); i++)	//	continues while
 		{
 			String url = imgArray.get(i);
 			if (url.contains("http://"))
