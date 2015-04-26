@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class WebBrowser 
 {
@@ -16,6 +17,7 @@ public class WebBrowser
 		//String url = "http://htmldog.com/examples/images1.html";
 		//String url = "http://portquiz.net:8080/";
 		String url = "http://www.utdallas.edu/os.html";
+		ArrayList<String> imgArray = new ArrayList<String>();
 		String host;
 		String directory;
 		String webfile = "";
@@ -137,6 +139,7 @@ public class WebBrowser
 					img = img.replaceAll("\"", "");
 					webfile = webfile.substring(webfile.indexOf(">") + 1);
 					System.out.println("Image: " + img + "\n");
+					imgArray.add(img);
 				}
 			}
 		}
