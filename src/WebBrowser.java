@@ -14,31 +14,31 @@ public class WebBrowser
 {
 	public static void main(String[] args) throws IOException
 	{
-		String url = args[0];
-		String 	savedURL = url,
-				host,
-				directory,
-				webfile = "",
-				title,
-				text,
-				img,
-				head;
+		String url = args[0];	//	stores command line arguments
+		String 	savedURL = url,	//	stores url
+				host,			//	domain
+				directory,		//	directory within domain that contains html file
+				webfile = "",	//	String to store html in
+				title,			//	holds text within <title> to be printed
+				text,			//	temporarily holds text within <p> to be printed
+				img,			//	temporarily holds text within <img to be printed
+				head;			//	temporarily holds text within <h(1,2)> to be printed
 		ArrayList<String> imgArray = new ArrayList<String>();
-		int port = 80,
-			textIndex,
-			imgIndex,
-			headIndex;
-		boolean	textCont,
-				imgCont,
-				headCont,
-				textRun,
-				imgRun,
-				headRun;
+		int port = 80,			//	default port
+			textIndex,			//	first position in webfile that has <p>
+			imgIndex,			//	first position in webfile that has <img src="
+			headIndex;			//	first position in webfile that has <h(1,2)>
+		boolean	textCont,		//	whether or not <p> is in webfile
+				imgCont,		//	whether or not <img src=" is in webfile
+				headCont,		//	whether or not <h(1,2)> is in webfile
+				textRun,		//	controls if text should be parsed
+				imgRun,			//	controls if text should be parsed
+				headRun;		//	controls if text should be parsed
 		if (url.contains("http://"))
 		{
 			url = url.substring(7);
 		}
-		if (url.contains(":"))
+		if (url.contains(":"))	//	searches for ":" in url
 		{
 			host = url.substring(0, url.indexOf(":"));
 			port = Integer.parseInt(url.substring(url.indexOf(":") + 1, url.indexOf("/")));
@@ -58,41 +58,41 @@ public class WebBrowser
 		pw.flush();
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		webfile = getHTML(br);
-		if (webfile != "404 Page Not Found")
+		if (webfile != "404 Page Not Found")	//	only enters if not a 404 page
 		{			
-			if (webfile.contains("<title>"))
+			if (webfile.contains("<title>"))	//	searches for website title
 			{
-				webfile = webfile.substring(webfile.indexOf("<title>") + 7);
-				title = webfile.substring(0, webfile.indexOf("</title>"));
-				title = title.replaceAll("    ", " ");
+				webfile = webfile.substring(webfile.indexOf("<title>") + 7);	//	removes first header tag from webfile
+				title = webfile.substring(0, webfile.indexOf("</title>"));	//	puts everything from beginning of webfile to </title> in title
+				title = title.replaceAll("    ", " ");	//	gets rid of large blanks
 				title = title.replaceAll("   ", " ");
-				System.out.println(title + "\n");
+				System.out.println(title + "\n");	//	prints website title
 			}
 					
-			while (webfile.contains("<p>") || webfile.contains("<img src="))
+			while (webfile.contains("<p>") || webfile.contains("<img src=") || webfile.contains("<h"))	//	only enters if <p>, <img src=", or <h are in webfile
 			{
-				textIndex = imgIndex = headIndex = 0;
+				textIndex = imgIndex = headIndex = 0;	//	sets all variables to 0 so previous loops will not affect current loop
 				textCont = imgCont = headCont = textRun = imgRun = headRun = false;
 				
-				if (webfile.contains("<p>"))
+				if (webfile.contains("<p>"))	//	acknowledges that webfile contains <p> with textCont
 				{
 					textIndex = webfile.indexOf("<p>");
 					textCont = true;
 				}
 				
-				if (webfile.contains("<img src="))
+				if (webfile.contains("<img src="))	//	acknowledges that webfile contains <img src=" with imgCont
 				{
 					imgIndex = webfile.indexOf("<img src=");
 					imgCont = true;
 				}
 				
-				if (webfile.contains("<h1"))
+				if (webfile.contains("<h1"))	//	acknowledges that webfile contains <h with headCont
 				{
 					headIndex = webfile.indexOf("<h1");
 					headCont = true;
 				}
 				
-				if (textCont && imgCont && headCont)
+				if (textCont && imgCont && headCont)	//	checks if all three are in webfile
 				{
 					if ((textIndex < imgIndex) && (textIndex < headIndex))
 						textRun = true;
@@ -101,7 +101,7 @@ public class WebBrowser
 					else if ((headIndex < textIndex) && (headIndex < imgIndex))
 						headRun = true;
 				}
-				else if (textCont && imgCont)
+				else if (textCont && imgCont)	//checks if <p> and <img src=" are in webfile
 				{
 					if (textIndex < imgIndex)
 						textRun = true;
@@ -131,8 +131,8 @@ public class WebBrowser
 				
 				if (textRun)
 				{
-					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
-					text = text.replaceAll("<b>", "");
+					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));	//	sets text equal to characters inside <p> and </p> within webfile
+					text = text.replaceAll("<b>", "");	//	gets rid of tags useless to the command line
 					text = text.replaceAll("</b>", "");
 					text = text.replaceAll("<br/>", "\n");
 					text = text.replaceAll("<i>", "");
@@ -259,14 +259,14 @@ public class WebBrowser
 		String line = "";
 		try
 		{
-			while ((line = br.readLine()) != null)
+			while ((line = br.readLine()) != null)	//	only loops while next line is not blank
 			{
-				if (line.contains("HTTP/1.1 404 Not Found"))
+				if (line.contains("HTTP/1.1 404 Not Found"))	//	checks for 404 message
 				{
 					html = "404 Page Not Found";
 					break;
 				}
-				if (line.contains("</body>"))
+				if (line.contains("</body>"))	//	checks for end of body
 				{
 					html += line;
 					break;
@@ -274,7 +274,7 @@ public class WebBrowser
 				html += line;
 			}
 		}
-		catch (SocketException e)
+		catch (SocketException e)	//	catches error reading file
 		{
 			System.out.println(e.getMessage() + "\n");
 		}
