@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class WebBrowser 
@@ -14,9 +16,9 @@ public class WebBrowser
 		//String url = "matthewecker.com/index.html";
 		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
 		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
-		//String url = "http://htmldog.com/examples/images1.html";
+		String url = "http://htmldog.com/examples/images1.html";
 		//String url = "http://portquiz.net:8080/";
-		String url = "http://www.utdallas.edu/os.html";
+		//String url = "http://www.utdallas.edu/os.html";
 		ArrayList<String> imgArray = new ArrayList<String>();
 		String host;
 		String directory;
@@ -46,7 +48,6 @@ public class WebBrowser
 			host = url.substring(0, url.indexOf("/"));
 			directory = url.substring(url.indexOf("/"));
 		}
-
 		Socket socket = new Socket(host, port);
 		PrintWriter pw = new PrintWriter(socket.getOutputStream());
 		pw.println("GET " + directory + " HTTP/1.1");
@@ -55,9 +56,7 @@ public class WebBrowser
 		pw.println("");
 		pw.flush();
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		
 		webfile = getHTML(br);
-		
 		if (webfile != "404 Page Not Found")
 		{			
 			if (webfile.contains("<title>"))
@@ -142,6 +141,7 @@ public class WebBrowser
 					imgArray.add(img);
 				}
 			}
+			printImages(imgArray);
 		}
 		else
 		{
@@ -149,11 +149,49 @@ public class WebBrowser
 		}
 	}
 
+	public static void printImages(ArrayList<String> imgArray) throws IOException
+	{
+		String host;
+		String directory;
+		int port = 80;
+		for (int i = 0; i < imgArray.size(); i++)
+		{
+			String url = imgArray.get(i);
+			int byteLine = 0;
+			if (url.contains("http://"))
+			{
+				url = url.substring(7);
+			}
+			if (url.contains(":"))
+			{
+				host = url.substring(0, url.indexOf(":"));
+				port = Integer.parseInt(url.substring(url.indexOf(":") + 1, url.indexOf("/")));
+				directory = url.substring(url.indexOf("/"));
+			}
+			else
+			{
+				host = url.substring(0, url.indexOf("/"));
+				directory = url.substring(url.indexOf("/"));
+			}
+			Socket socket = new Socket(host, port);
+			PrintWriter pw = new PrintWriter(socket.getOutputStream());
+			pw.println("GET " + directory + " HTTP/1.1");
+			pw.println("Host: " + host);
+			pw.println("Accept: */*");
+			pw.println("");
+			pw.flush();
+			DataInputStream input = new DataInputStream(socket.getInputStream());
+			while ((byteLine = input.read()) != -1)
+			{
+				
+			}
+		}
+	}
+	
 	public static String getHTML(BufferedReader br) throws IOException
 	{
 		String html = "";
 		String line = "";
-		
 		try
 		{
 			while ((line = br.readLine()) != null)
@@ -175,7 +213,6 @@ public class WebBrowser
 		{
 			System.out.println(e.getMessage() + "\n");
 		}
-		
 		return html;
 	}
 }
