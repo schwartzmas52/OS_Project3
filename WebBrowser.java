@@ -190,6 +190,7 @@ public class WebBrowser
 		String host;
 		String directory;
 		int port = originPort;
+        //checks url in the same way as before
 		for (int i = 0; i < imgArray.size(); i++)	//	continues while
 		{
 			String url = imgArray.get(i);
@@ -228,11 +229,13 @@ public class WebBrowser
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 			while ((byteLine = input.read()) != -1)
 			{
+                //checks if header
 				if (header) 
 				{
 					intArray[count] = byteLine;
-					if (count >= 4) 
+					if (count >= 4)
 					{
+                        //header is denoted by sequence "13 10 13 10"
 						if (intArray[count-3] == 13 && intArray[count-2] == 10 && intArray[count-1] == 13 && intArray[count] == 10) 
 						{
 							header = false;
@@ -242,9 +245,11 @@ public class WebBrowser
 				} 
 				else 
 				{
+                    //writes to stream after header
 					byteStream.write(byteLine);
 				}
 			}
+            //makes byte array and outputs image named after file name on web
 			byte[] byteArray = byteStream.toByteArray();
 			FileOutputStream writer = new FileOutputStream(new File(directory.substring(directory.lastIndexOf("/") + 1)));
 	        writer.write(byteArray);
