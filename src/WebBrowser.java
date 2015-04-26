@@ -14,12 +14,7 @@ public class WebBrowser
 {
 	public static void main(String[] args) throws IOException
 	{
-		//String url = "http://www.december.com/html/demo/hello.html";
-		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
-		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
-		String url = "http://htmldog.com/examples/images1.html";
-		//String url = "http://portquiz.net:8080/";
-		//String url = "http://www.utdallas.edu/os.html";
+		String url = args[0];
 		String 	savedURL = url,
 				host,
 				directory,
