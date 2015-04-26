@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class WebBrowser 
@@ -18,6 +17,7 @@ public class WebBrowser
 		String url = "http://htmldog.com/examples/images1.html";
 		//String url = "http://portquiz.net:8080/";
 		//String url = "http://www.utdallas.edu/os.html";
+		String savedURL = url;
 		ArrayList<String> imgArray = new ArrayList<String>();
 		String host;
 		String directory;
@@ -139,7 +139,7 @@ public class WebBrowser
 					imgArray.add(img);
 				}
 			}
-			printImages(imgArray);
+			printImages(imgArray, savedURL, port);
 		}
 		else
 		{
@@ -147,11 +147,11 @@ public class WebBrowser
 		}
 	}
 
-	public static void printImages(ArrayList<String> imgArray) throws IOException
+	public static void printImages(ArrayList<String> imgArray, String originalURL, int originPort) throws IOException
 	{
 		String host;
 		String directory;
-		int port = 80;
+		int port = originPort;
 		for (int i = 0; i < imgArray.size(); i++)
 		{
 			String url = imgArray.get(i);
@@ -159,18 +159,27 @@ public class WebBrowser
 			if (url.contains("http://"))
 			{
 				url = url.substring(7);
-			}
-			if (url.contains(":"))
-			{
-				host = url.substring(0, url.indexOf(":"));
-				port = Integer.parseInt(url.substring(url.indexOf(":") + 1, url.indexOf("/")));
-				directory = url.substring(url.indexOf("/"));
+				if (url.contains(":"))
+				{
+					host = url.substring(0, url.indexOf(":"));
+					port = Integer.parseInt(url.substring(url.indexOf(":") + 1, url.indexOf("/")));
+					directory = url.substring(url.indexOf("/"));
+				}
+				else
+				{
+					host = url.substring(0, url.indexOf("/"));
+					directory = url.substring(url.indexOf("/"));
+				}
 			}
 			else
 			{
-				host = url.substring(0, url.indexOf("/"));
-				directory = url.substring(url.indexOf("/"));
+				host = originalURL.substring(7);
+				host = host.substring(0, host.indexOf("/"));
+				directory = originalURL.substring(7);
+				directory = directory.substring(directory.indexOf("/"), directory.lastIndexOf("/") + 1);
+				directory += url;
 			}
+			System.out.println(host + " " + directory + " " + port);
 			Socket socket = new Socket(host, port);
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + directory + " HTTP/1.1");
