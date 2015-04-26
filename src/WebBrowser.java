@@ -108,17 +108,9 @@ public class WebBrowser
 					text = text.replaceAll("</strong>", "");
 					text = text.replaceAll("    ", " ");
 					text = text.replaceAll("   ", " ");
-					
-					if (text.contains("<a href"))
-					{
-						text = text.replaceAll("<a href.*?>", "");
-						text = text.replaceAll("</a>", "");
-					}
-					
-					if (text.contains("alt=\""))
-					{
-						text = text.replaceAll("alt=\".*?>", "");
-					}
+					text = text.replaceAll("<a href.*?>", "");
+					text = text.replaceAll("</a>", "");
+					text = text.replaceAll("alt=\".*?>", "");
 					
 					if (text.contains("<img src"))
 					{
