@@ -13,7 +13,6 @@ public class WebBrowser
 	public static void main(String[] args) throws IOException
 	{
 		//String url = "http://www.december.com/html/demo/hello.html";
-		//String url = "matthewecker.com/index.html";
 		//String url = "http://www.utdallas.edu/~ozbirn/image.html";
 		//String url = "http://assets.climatecentral.org/images/uploads/news/Earth.jpg";
 		String url = "http://htmldog.com/examples/images1.html";
@@ -100,6 +99,13 @@ public class WebBrowser
 				if (textRun)
 				{
 					text = webfile.substring(webfile.indexOf("<p>") + 3, webfile.indexOf("</p>"));
+					text = text.replaceAll("<b>", "");
+					text = text.replaceAll("</b>", "");
+					text = text.replaceAll("<i>", "");
+					text = text.replaceAll("</i>", "");
+					text = text.replaceAll("<br/>", "");
+					text = text.replaceAll("<strong>", "");
+					text = text.replaceAll("</strong>", "");
 					text = text.replaceAll("    ", " ");
 					text = text.replaceAll("   ", " ");
 					
